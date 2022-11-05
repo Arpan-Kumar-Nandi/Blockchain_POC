@@ -3,12 +3,9 @@ import { IsNotEmpty, IsString, IsHexadecimal } from 'class-validator';
 export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
-  name: string;
-
-  @IsNotEmpty()
-  password: string;
+  username: string;
 
   @IsNotEmpty()
   @IsHexadecimal()
-  accountAddress: string;
+  publicAddress: string;
 }

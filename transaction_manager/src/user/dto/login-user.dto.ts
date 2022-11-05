@@ -2,9 +2,10 @@ import { IsNotEmpty, IsString, IsHexadecimal } from 'class-validator';
 
 export class LoginUserDto {
   @IsNotEmpty()
-  @IsString()
-  id: string;
+  @IsHexadecimal()
+  publicAddress: string;
 
   @IsNotEmpty()
-  password: string;
+  @IsString()
+  signature: string;
 }

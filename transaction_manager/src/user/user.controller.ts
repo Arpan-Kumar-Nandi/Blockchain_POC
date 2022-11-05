@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Post, Session } from '@nestjs/common';
+import { JwtAuthGuard } from './../guards/jwt-auth.guard';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Query,
+  Req,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -9,29 +19,42 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Get('/finduser')
+  async findUser(@Query('publicAddress') publicAddress) {
+    const user = await this.userService.findUser(publicAddress);
+    return user;
+  }
+
   @Post('/signup')
-  async createUser(@Body() body: CreateUserDto, @Session() session: any) {
+  async createUser(@Body() body: CreateUserDto) {
+    console.log(body);
     const user = await this.userService.createUser(body);
-    session.userId = user['_id'];
     return user;
   }
 
   @Post('/signin')
-  async login(@Body() body: LoginUserDto, @Session() session: any) {
-    const user = await this.userService.signInUser(body);
-    session.userId = user['_id'];
-    return user;
+  async login(@Body() body: LoginUserDto) {
+    const jwtSignature = await this.userService.login(body);
+    return jwtSignature;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/whoami')
-  whoAmI(@CurrentUser() user: User) {
-    return user;
+  whoAmI(@Request() req) {
+    return req.user;
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('/logout')
+  logout() {
+    return;
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get('/balance')
   async getBalance(@CurrentUser() user: User) {
     const balance = await this.userService.fetchAccountBalance(
-      user.accountAddress,
+      user.publicAddress,
     );
     return balance;
   }

@@ -15,9 +15,9 @@ contract POC20 is ERC20 {
 
     }
 
-    function buyTokens(uint amount) public payable {
-        require(amount > 0, "You need exchange some ethers for POC20");
-        uint convertEtherToPOCToken = amount * tokensPerUnitEther;
+    function buyTokens() public payable {
+        require(msg.value > 0, "You need exchange some ethers for POC20");
+        uint convertEtherToPOCToken = msg.value * tokensPerUnitEther;
         _transfer(owner, msg.sender, convertEtherToPOCToken);
     }
 
