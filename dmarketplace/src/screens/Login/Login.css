@@ -1,0 +1,111 @@
+.login-screen {
+  width: 100%;
+  height: 100vh;
+  text-align: center;
+  background-image: linear-gradient(to right bottom, rgba(235, 151, 78, 0.05), rgba(230, 125, 34, 0.35)), url('../../assets/loginscreen.webp');
+  background-size: cover;
+  background-position: center;
+}
+
+.login-header-container {
+  padding: 9.6rem;
+}
+
+.login-header-text {
+  font-size: 4.5rem;
+}
+
+.login-card-container {
+  background-color: #fff;
+  padding: 4.6rem;
+  width: 25%;
+  margin: auto;
+  box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.075);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: 11px;
+  min-height: 45vh;
+  gap: 4.6rem;
+}
+
+.login-card-heading {
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #cf711f;
+  text-transform: uppercase;
+  letter-spacing: 0.75px;
+}
+
+.login-card-button-metamask {
+  padding: 1.2rem 2.4rem;
+  border-radius: 9px;
+  color: #e67e22;
+  display: grid;
+  grid-template-columns: 10fr 90fr;
+  background-color: #fdf2e9;
+  border: none;
+  align-items: center;
+}
+
+.login-card-button-metamask:hover,
+.login-card-button-metamask:focus {
+
+  box-shadow: inset 0 0 0 2px #e67e22;
+}
+
+.login-card-button-metamask-logo {
+  width: 3rem;
+}
+
+.login-card-button-text {
+  font-size: 1.8rem;
+  font-weight: 500;
+}
+
+.login-card-sign-up-container {
+  padding: 1.2rem 0rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-card-sign-up-container-text {
+  font-size: 1.2rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-align: left;
+  margin-bottom: 0.8rem;
+}
+
+.login-card-sign-up-container-input {
+  padding: 1.2rem;
+  font-size: 1.8rem;
+  font-family: inherit;
+  border: none;
+  box-shadow: inset 0 0 0 2px #fdf2e9;
+  margin-bottom: 1.6rem;
+  color: #45260a;
+}
+
+.login-card-sign-up-container-input::placeholder {
+  color: #45260a;
+  opacity: 0.5;
+}
+
+.login-card-sign-up-container-input:focus {
+  box-shadow: inset 0 0 0 2px #e67e22;
+  border: none;
+  outline: none;
+}
+
+.login-card-sign-up-container-button {
+  align-self: flex-end;
+  border-radius: 50%;
+  padding: 1.6rem;
+  background-color: #e67e22;
+}
+
+.icon {
+  font-size: 2.5rem;
+  fill: #fff;
+}

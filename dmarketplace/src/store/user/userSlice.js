@@ -4,7 +4,6 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 export const fetchUserDetails = createAsyncThunk(
   'user/whoami',
   async ({ metamaskBalance, chainId, accessToken }, thunkAPI) => {
-    console.log(accessToken)
     try {
       const { data } = await axios.get('/user/whoami', {
         headers: {
@@ -36,6 +35,7 @@ const userSlice = createSlice({
       state.loading = false
       state.userAccount = null
       state.error = null
+      localStorage.removeItem('userAccount')
     },
   },
   extraReducers: (builder) => {

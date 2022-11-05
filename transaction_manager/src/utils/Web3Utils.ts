@@ -20,7 +20,6 @@ export default class Web3Util {
   async getBalance(address: string) {
     const poc20 = await this.poc20();
     const balance = await poc20.methods.getBalance().call();
-    console.log(fromWei(balance, 'ether'));
     return this.web3.eth.getBalance(address);
   }
 

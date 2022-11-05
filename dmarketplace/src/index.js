@@ -7,6 +7,7 @@ import Login from './screens/Login/Login'
 import reportWebVitals from './reportWebVitals'
 import './index.css'
 import store from './store/index'
+import Dashboard from './screens/Dashboard/Dashboard'
 
 const container = document.getElementById('root')
 const root = createRoot(container)
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: '/login',
     element: <Login />,
+  },
+  {
+    path: '/dashboard',
+    element: <Dashboard />,
   },
 ])
 
