@@ -14,11 +14,11 @@ export default class Web3Util {
     return new this.web3.eth.Contract(POC20.abi as AbiItem[], contractAddress);
   }
 
-  async mintPOC20Tokens(publicAddress: string) {
+  async mintPOC20Tokens(exchangeRate: number, publicAddress: string) {
     const deployedContract = await new this.web3.eth.Contract(
       POC20.abi as AbiItem[],
     )
-      .deploy({ data: POC20.bytecode })
+      .deploy({ data: POC20.bytecode, arguments: [exchangeRate] })
       .send({ gas: 1500000, from: publicAddress });
 
     return deployedContract;
@@ -35,7 +35,10 @@ export default class Web3Util {
     const poc20 = await this.poc20(contractAddress);
     const balance = await poc20.methods.getBalance().call();
     const balanceinEther = fromWei(balance, 'ether');
-    return parseFloat(balanceinEther);
+
+    const exchangeRate = await poc20.methods.tokensPerUnitEther().call();
+
+    return { balance: parseFloat(balanceinEther), exchangeRate };
   }
 
   async buyPOC20Tokens(accountAddress: string, amountInEther: string) {

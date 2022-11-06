@@ -16,8 +16,14 @@ export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Get('/mintPOC20Tokens')
-  async mintPOC20Tokens(@Request() req) {
-    return this.transactionService.mintPOC20Tokens(req.user.publicAddress);
+  async mintPOC20Tokens(
+    @Query('exchangeRate') exchangeRate: number,
+    @Request() req,
+  ) {
+    return this.transactionService.mintPOC20Tokens(
+      exchangeRate,
+      req.user.publicAddress,
+    );
   }
 
   @Get('/fetchDeployedContractsToBuyFrom')

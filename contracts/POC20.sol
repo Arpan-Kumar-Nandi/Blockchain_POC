@@ -6,11 +6,12 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract POC20 is ERC20 {
 
-    uint public tokensPerUnitEther = 10;
+    uint public tokensPerUnitEther;
     address payable owner;
 
-    constructor() ERC20('POC_TOKEN', 'POC20') {
-         _mint(msg.sender, 1000 * 10 ** 18);
+    constructor(uint exchangeRate) ERC20('POC_TOKEN', 'POC20') {
+        _mint(msg.sender, 1000 * 10 ** 18);
+        tokensPerUnitEther = exchangeRate;
         owner = payable(msg.sender);
 
     }

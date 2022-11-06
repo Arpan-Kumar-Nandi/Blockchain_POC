@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   mintPOC20Tokens,
@@ -10,6 +10,8 @@ import web3 from '../../../web3'
 
 const Wallet = () => {
   const dispatch = useDispatch()
+
+  const [exchangeRate, setExchangeRate] = useState(0)
 
   const { mintedContract, userAccount, buyTokensFromContracts } = useSelector(
     (state) => state.user
@@ -23,7 +25,7 @@ const Wallet = () => {
 
   const handleMinting = async (e) => {
     e.preventDefault()
-    await dispatch(mintPOC20Tokens())
+    await dispatch(mintPOC20Tokens(exchangeRate))
     await dispatch(fetchPOC20Balance())
     let ethBalance = await web3.eth.getBalance(userAccount.publicAddress)
     ethBalance = web3.utils.fromWei(ethBalance, 'ether')
@@ -39,6 +41,10 @@ const Wallet = () => {
               {item.contract.name} is at {item.contract.contractAddress} minted
               by {item.contract.mintedBy}
             </p>
+            <p>
+              Exchange rate of ether to {item.contract.name} is{' '}
+              {item.exchangeRate}
+            </p>
             <p>Available tokens: {item.balance}</p>
           </li>
         ))}
@@ -48,6 +54,11 @@ const Wallet = () => {
 
   return (
     <div>
+      <input
+        type='number'
+        value={exchangeRate}
+        onChange={(e) => setExchangeRate(e.target.value)}
+      />
       <button onClick={handleMinting}>Mint</button>
       {mintedContract && (
         <p>Contract minted successfully at: {mintedContract.contractAddress}</p>

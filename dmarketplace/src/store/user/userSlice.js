@@ -43,9 +43,11 @@ export const fetchPOC20Balance = createAsyncThunk(
 
 export const mintPOC20Tokens = createAsyncThunk(
   'user/mintPOC20Tokens',
-  async (_, thunkAPI) => {
+  async (exchangeRate, thunkAPI) => {
     try {
-      const { data } = await axios.get('/transaction/mintPOC20Tokens')
+      const { data } = await axios.get(
+        `/transaction/mintPOC20Tokens?exchangeRate=${exchangeRate}`
+      )
       return data
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data.message ?? err.message)

@@ -13,8 +13,11 @@ export class TransactionService {
     private readonly contractModel: Model<ContractDocument>,
   ) {}
 
-  async mintPOC20Tokens(publicAddress: string) {
-    const deployedContract = await this.web3Util.mintPOC20Tokens(publicAddress);
+  async mintPOC20Tokens(exchangeRate: number, publicAddress: string) {
+    const deployedContract = await this.web3Util.mintPOC20Tokens(
+      exchangeRate,
+      publicAddress,
+    );
     let name = await deployedContract.methods.name().call();
     name = name.split(' ')[0];
     const contractAddress = deployedContract.options.address;
@@ -35,10 +38,9 @@ export class TransactionService {
     let includeContractBalance = [];
 
     for (const contract of listOfContractsToBuyFrom) {
-      const balance = await this.web3Util.getPOC20ContractBalance(
-        contract.contractAddress,
-      );
-      includeContractBalance.push({ contract, balance });
+      const { balance, exchangeRate } =
+        await this.web3Util.getPOC20ContractBalance(contract.contractAddress);
+      includeContractBalance.push({ contract, balance, exchangeRate });
     }
     return includeContractBalance;
   }
