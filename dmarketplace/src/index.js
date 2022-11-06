@@ -8,6 +8,7 @@ import reportWebVitals from './reportWebVitals'
 import './index.css'
 import store from './store/index'
 import Dashboard from './screens/Dashboard/Dashboard'
+import Wallet from './screens/Dashboard/components/Wallet'
 
 const container = document.getElementById('root')
 const root = createRoot(container)
@@ -24,6 +25,12 @@ const router = createBrowserRouter([
   {
     path: '/dashboard',
     element: <Dashboard />,
+    children: [
+      {
+        path: 'wallet',
+        element: <Wallet />,
+      },
+    ],
   },
 ])
 

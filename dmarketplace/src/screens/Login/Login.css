@@ -46,6 +46,7 @@
   background-color: #fdf2e9;
   border: none;
   align-items: center;
+  transition: all 0.3s;
 }
 
 .login-card-button-metamask:hover,
