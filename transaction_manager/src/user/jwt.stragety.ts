@@ -15,6 +15,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: any) {
     const user = await this.userService.findUser(payload.publicAddress);
+    // const balance = await this.userService.getPOC20Balance(
+    //   payload.publicAddress,
+    // );
+    // // Object.assign(user, { poc20Balance: balance });
+    // const setUser = { ...user, poc20Balance: balance };
     return user;
   }
 }

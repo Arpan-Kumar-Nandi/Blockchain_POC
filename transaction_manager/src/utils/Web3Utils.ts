@@ -13,14 +13,25 @@ export default class Web3Util {
   async poc20() {
     return new this.web3.eth.Contract(
       POC20.abi as AbiItem[],
-      POC20.networks[this.networkID].address,
+      '0x104480c1d962F2825BB053a6D7f28DE6c3bEF91b',
     );
   }
 
-  async getBalance(address: string) {
+  async mintPOC20Tokens(publicAddress: string) {
+    const deployedContract = await new this.web3.eth.Contract(
+      POC20.abi as AbiItem[],
+    )
+      .deploy({ data: POC20.bytecode })
+      .send({ gas: 1500000, from: publicAddress });
+
+    console.log(deployedContract.options.address);
+  }
+
+  async getPOC20Balance(publicAddress: string) {
     const poc20 = await this.poc20();
-    const balance = await poc20.methods.getBalance().call();
-    return this.web3.eth.getBalance(address);
+    const balance = await poc20.methods.balanceOf(publicAddress).call();
+    const balanceinEther = fromWei(balance, 'ether');
+    return balanceinEther;
   }
 
   async buyPOC20Tokens(accountAddress: string, amountInEther: string) {

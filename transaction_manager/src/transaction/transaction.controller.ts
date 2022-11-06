@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { CurrentUser } from '../user/decorators/current-user.decorator';
 import { TransactionService } from './transaction.service';
@@ -7,6 +7,11 @@ import { TransactionService } from './transaction.service';
 @Controller('transaction')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
+
+  @Get('/mintPOC20Tokens')
+  async mintPOC20Tokens(@Query('publicAddress') publicAddress) {
+    await this.transactionService.mintPOC20Tokens(publicAddress);
+  }
 
   @Post('/buyPOC20Tokens')
   async buyPOC20Tokens(@Body() body, @CurrentUser() user) {

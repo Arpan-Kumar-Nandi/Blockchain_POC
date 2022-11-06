@@ -5,7 +5,11 @@ import Web3Util from '../utils/Web3Utils';
 export class TransactionService {
   private readonly web3Util = new Web3Util();
 
-  async buyPOC20Tokens(accountAddress: string, amountInEther: string) {
-    return this.web3Util.buyPOC20Tokens(accountAddress, amountInEther);
+  async mintPOC20Tokens(publicAddress: string) {
+    return this.web3Util.mintPOC20Tokens(publicAddress);
+  }
+
+  async buyPOC20Tokens(publicAddress: string, amountInEther: string) {
+    return this.web3Util.buyPOC20Tokens(publicAddress, amountInEther);
   }
 }

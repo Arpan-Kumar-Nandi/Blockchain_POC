@@ -44,17 +44,17 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/logout')
-  logout() {
-    return;
+  @Get('/getpoc20balance')
+  async getPOC20Balance(@Request() req) {
+    const balance = await this.userService.getPOC20Balance(
+      req.user.publicAddress,
+    );
+    return balance;
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/balance')
-  async getBalance(@CurrentUser() user: User) {
-    const balance = await this.userService.fetchAccountBalance(
-      user.publicAddress,
-    );
-    return balance;
+  @Get('/logout')
+  logout() {
+    return;
   }
 }

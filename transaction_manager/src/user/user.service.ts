@@ -45,6 +45,9 @@ export class UserService {
     });
     if (address.toLowerCase() === publicAddress.toLowerCase()) {
       user.nonce = this.commonUtils.generateNonce();
+      // const poc20Balance = await this.web3Util.getPOC20Balance(
+      //      user.publicAddress,
+      // )
       await user.save();
       const payload = { id: user.id, publicAddress: user.publicAddress };
       return {
@@ -63,7 +66,8 @@ export class UserService {
     return user;
   }
 
-  async fetchAccountBalance(address: string) {
-    return this.web3Util.getBalance(address);
+  async getPOC20Balance(publicAddress) {
+    const poc20Balance = await this.web3Util.getPOC20Balance(publicAddress);
+    return poc20Balance;
   }
 }
