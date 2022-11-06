@@ -1,4 +1,8 @@
 import {
+  Contract,
+  ContractDocument,
+} from './../transaction/schema/contract.schema';
+import {
   BadRequestException,
   Injectable,
   NotFoundException,
@@ -21,6 +25,8 @@ export class UserService {
   private readonly commonUtils = new CommonUtils();
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    @InjectModel(Contract.name)
+    private readonly contractModel: Model<ContractDocument>,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -67,7 +73,43 @@ export class UserService {
   }
 
   async getPOC20Balance(publicAddress) {
-    const poc20Balance = await this.web3Util.getPOC20Balance(publicAddress);
-    return poc20Balance;
+    const contractsMintedByUser = await this.contractModel.find({
+      mintedBy: publicAddress,
+    });
+
+    const listOfContractAddressMintedByUser = contractsMintedByUser.map(
+      (item) => item.contractAddress,
+    );
+
+    let totalMintedBalance = 0;
+    if (listOfContractAddressMintedByUser.length) {
+      for (const address of listOfContractAddressMintedByUser) {
+        totalMintedBalance += await this.web3Util.getPOC20Balance(
+          publicAddress,
+          address,
+        );
+      }
+    }
+
+    const tokensBoughtFromContracts = await this.contractModel.find({
+      boughtBy: publicAddress,
+    });
+
+    const listOfContractAddressBoughtByUser = tokensBoughtFromContracts.map(
+      (item) => item.contractAddress,
+    );
+
+    if (listOfContractAddressBoughtByUser.length) {
+      for (const address of listOfContractAddressBoughtByUser) {
+        totalMintedBalance += await this.web3Util.getPOC20Balance(
+          publicAddress,
+          address,
+        );
+      }
+    }
+
+    return totalMintedBalance;
+    // const poc20Balance = await this.web3Util.getPOC20Balance(publicAddress);
+    // return poc20Balance;
   }
 }

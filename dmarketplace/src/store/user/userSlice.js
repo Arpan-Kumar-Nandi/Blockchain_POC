@@ -41,6 +41,32 @@ export const fetchPOC20Balance = createAsyncThunk(
   }
 )
 
+export const mintPOC20Tokens = createAsyncThunk(
+  'user/mintPOC20Tokens',
+  async (_, thunkAPI) => {
+    try {
+      const { data } = await axios.get('/transaction/mintPOC20Tokens')
+      return data
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data.message ?? err.message)
+    }
+  }
+)
+
+export const fetchDeployedContractsToBuyFrom = createAsyncThunk(
+  'user/fetchDeployedContractsToBuyFrom',
+  async (_, thunkAPI) => {
+    try {
+      const { data } = await axios.get(
+        '/transaction/fetchDeployedContractsToBuyFrom'
+      )
+      return data
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data.message ?? err.message)
+    }
+  }
+)
+
 const userSlice = createSlice({
   name: 'user',
   initialState: {
@@ -48,7 +74,9 @@ const userSlice = createSlice({
     userAccount: null,
     metamaskBalance: 0,
     poc20balance: 0,
+    mintedContract: null,
     error: null,
+    buyTokensFromContracts: [],
   },
   reducers: {
     logout(state) {
@@ -86,6 +114,30 @@ const userSlice = createSlice({
         state.poc20balance = action.payload
       })
       .addCase(fetchPOC20Balance.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
+      })
+      .addCase(mintPOC20Tokens.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(mintPOC20Tokens.fulfilled, (state, action) => {
+        state.loading = false
+        state.mintedContract = action.payload
+      })
+      .addCase(mintPOC20Tokens.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
+      })
+      .addCase(fetchDeployedContractsToBuyFrom.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(fetchDeployedContractsToBuyFrom.fulfilled, (state, action) => {
+        state.loading = false
+        state.buyTokensFromContracts = action.payload
+      })
+      .addCase(fetchDeployedContractsToBuyFrom.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload
       })

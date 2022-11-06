@@ -5,11 +5,9 @@ import {
   Get,
   Post,
   Query,
-  Req,
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { CurrentUser } from './decorators/current-user.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { User } from './schema/user.schema';
@@ -21,20 +19,17 @@ export class UserController {
 
   @Get('/finduser')
   async findUser(@Query('publicAddress') publicAddress) {
-    const user = await this.userService.findUser(publicAddress);
-    return user;
+    return this.userService.findUser(publicAddress);
   }
 
   @Post('/signup')
   async createUser(@Body() body: CreateUserDto) {
-    const user = await this.userService.createUser(body);
-    return user;
+    return this.userService.createUser(body);
   }
 
   @Post('/signin')
   async login(@Body() body: LoginUserDto) {
-    const jwtSignature = await this.userService.login(body);
-    return jwtSignature;
+    return this.userService.login(body);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -46,10 +41,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Get('/getpoc20balance')
   async getPOC20Balance(@Request() req) {
-    const balance = await this.userService.getPOC20Balance(
-      req.user.publicAddress,
-    );
-    return balance;
+    return this.userService.getPOC20Balance(req.user.publicAddress);
   }
 
   @UseGuards(JwtAuthGuard)

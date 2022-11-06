@@ -10,11 +10,8 @@ export default class Web3Util {
     this.web3.eth.getAccounts();
   }
 
-  async poc20() {
-    return new this.web3.eth.Contract(
-      POC20.abi as AbiItem[],
-      '0x104480c1d962F2825BB053a6D7f28DE6c3bEF91b',
-    );
+  async poc20(contractAddress: string) {
+    return new this.web3.eth.Contract(POC20.abi as AbiItem[], contractAddress);
   }
 
   async mintPOC20Tokens(publicAddress: string) {
@@ -24,33 +21,39 @@ export default class Web3Util {
       .deploy({ data: POC20.bytecode })
       .send({ gas: 1500000, from: publicAddress });
 
-    console.log(deployedContract.options.address);
+    return deployedContract;
   }
 
-  async getPOC20Balance(publicAddress: string) {
-    const poc20 = await this.poc20();
+  async getPOC20Balance(publicAddress: string, contractAddress: string) {
+    const poc20 = await this.poc20(contractAddress);
     const balance = await poc20.methods.balanceOf(publicAddress).call();
     const balanceinEther = fromWei(balance, 'ether');
-    return balanceinEther;
+    return parseFloat(balanceinEther);
+  }
+
+  async getPOC20ContractBalance(contractAddress: string) {
+    const poc20 = await this.poc20(contractAddress);
+    const balance = await poc20.methods.getBalance().call();
+    const balanceinEther = fromWei(balance, 'ether');
+    return parseFloat(balanceinEther);
   }
 
   async buyPOC20Tokens(accountAddress: string, amountInEther: string) {
-    const poc20 = await this.poc20();
-    try {
-      await poc20.methods
-        .buyTokens()
-        .send({
-          from: accountAddress,
-          value: toWei(amountInEther, 'ether'),
-        })
-        .on('Transfer', () => {
-          console.log('here');
-        });
-
-      const tokens = await poc20.methods.balanceOf(accountAddress).call();
-      console.log('here', tokens);
-    } catch (err) {
-      console.log(err);
-    }
+    // const poc20 = await this.poc20();
+    // try {
+    //   await poc20.methods
+    //     .buyTokens()
+    //     .send({
+    //       from: accountAddress,
+    //       value: toWei(amountInEther, 'ether'),
+    //     })
+    //     .on('Transfer', () => {
+    //       console.log('here');
+    //     });
+    //   const tokens = await poc20.methods.balanceOf(accountAddress).call();
+    //   console.log('here', tokens);
+    // } catch (err) {
+    //   console.log(err);
+    // }
   }
 }
