@@ -41,22 +41,20 @@ export default class Web3Util {
     return { balance: parseFloat(balanceinEther), exchangeRate };
   }
 
-  async buyPOC20Tokens(accountAddress: string, amountInEther: string) {
-    // const poc20 = await this.poc20();
-    // try {
-    //   await poc20.methods
-    //     .buyTokens()
-    //     .send({
-    //       from: accountAddress,
-    //       value: toWei(amountInEther, 'ether'),
-    //     })
-    //     .on('Transfer', () => {
-    //       console.log('here');
-    //     });
-    //   const tokens = await poc20.methods.balanceOf(accountAddress).call();
-    //   console.log('here', tokens);
-    // } catch (err) {
-    //   console.log(err);
-    // }
+  async buyPOC20Tokens(
+    contractAddress: string,
+    publicAddress: string,
+    ethersToSpend: number,
+  ) {
+    const poc20 = await this.poc20(contractAddress);
+    try {
+      const status = await poc20.methods.buyTokens().send({
+        from: publicAddress,
+        value: toWei(ethersToSpend.toString(), 'ether'),
+      });
+      return status;
+    } catch (err) {
+      console.log(err);
+    }
   }
 }

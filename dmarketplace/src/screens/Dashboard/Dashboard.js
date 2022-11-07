@@ -8,7 +8,10 @@ import {
 } from '../../store/user/userSlice'
 import mainlogo from '../../assets/mainlogo.png'
 import './Dashboard.css'
-import { MdAccountBalanceWallet } from 'react-icons/md'
+import {
+  MdAccountBalanceWallet,
+  MdOutlinePowerSettingsNew,
+} from 'react-icons/md'
 import web3 from '../../web3'
 
 const Dashboard = () => {
@@ -39,12 +42,14 @@ const Dashboard = () => {
   return (
     <>
       <header className='dashboard-header'>
-        <section className='dashboard-header-logo-container'>
+        <section
+          className='dashboard-header-logo-container'
+          onClick={() => navigate('/dashboard')}
+        >
           <img
             src={mainlogo}
             alt='mainlogo'
             className='dashboard-header-logo'
-            onClick={onDisconnect}
           />
           <span className='dashboard-header-logo-title'>DMarketplace</span>
         </section>
@@ -67,6 +72,10 @@ const Dashboard = () => {
               <span className='balance-unit'>ETH</span>
             </p>
           </div>
+          <MdOutlinePowerSettingsNew
+            className='logout-button'
+            onClick={onDisconnect}
+          />
         </section>
       </header>
       <main>

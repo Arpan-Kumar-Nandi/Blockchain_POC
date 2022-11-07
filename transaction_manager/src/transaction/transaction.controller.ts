@@ -35,9 +35,10 @@ export class TransactionController {
 
   @Post('/buyPOC20Tokens')
   async buyPOC20Tokens(@Body() body, @Request() req) {
-    await this.transactionService.buyPOC20Tokens(
+    return this.transactionService.buyPOC20Tokens(
+      body.contractAddress,
       req.user.publicAddress,
-      body.amountInEther,
+      body.ethersToSpend,
     );
   }
 }

@@ -45,7 +45,20 @@ export class TransactionService {
     return includeContractBalance;
   }
 
-  async buyPOC20Tokens(publicAddress: string, amountInEther: string) {
-    return this.web3Util.buyPOC20Tokens(publicAddress, amountInEther);
+  async buyPOC20Tokens(
+    contractAddress: string,
+    publicAddress: string,
+    ethersToSpend: number,
+  ) {
+    const updateContractToIncludeBuyer = await this.contractModel.findOne({
+      contractAddress,
+    });
+    updateContractToIncludeBuyer.boughtBy.push(publicAddress);
+    updateContractToIncludeBuyer.save();
+    return this.web3Util.buyPOC20Tokens(
+      contractAddress,
+      publicAddress,
+      ethersToSpend,
+    );
   }
 }

@@ -80,6 +80,7 @@
 
 .login-card-sign-up-container-input {
   padding: 1.2rem;
+  border-radius: 9px;
   font-size: 1.8rem;
   font-family: inherit;
   border: none;

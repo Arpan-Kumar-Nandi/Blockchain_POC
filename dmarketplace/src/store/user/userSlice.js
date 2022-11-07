@@ -69,6 +69,21 @@ export const fetchDeployedContractsToBuyFrom = createAsyncThunk(
   }
 )
 
+export const buyPOC20Tokens = createAsyncThunk(
+  'user/buyPOC20Tokens',
+  async ({ contractAddress, ethersToSpend }, thunkAPI) => {
+    try {
+      const { data } = await axios.post('/transaction/buyPOC20Tokens', {
+        contractAddress,
+        ethersToSpend,
+      })
+      return data
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data.message ?? err.message)
+    }
+  }
+)
+
 const userSlice = createSlice({
   name: 'user',
   initialState: {
@@ -79,6 +94,7 @@ const userSlice = createSlice({
     mintedContract: null,
     error: null,
     buyTokensFromContracts: [],
+    transactionStatus: null,
   },
   reducers: {
     logout(state) {
@@ -89,6 +105,12 @@ const userSlice = createSlice({
     },
     updateMetamaskBalance(state, action) {
       state.metamaskBalance = action.payload
+    },
+    resetMintedContract(state) {
+      state.mintedContract = null
+    },
+    resetTransactionStatus(state) {
+      state.transactionStatus = null
     },
   },
   extraReducers: (builder) => {
@@ -122,6 +144,7 @@ const userSlice = createSlice({
       .addCase(mintPOC20Tokens.pending, (state) => {
         state.loading = true
         state.error = null
+        state.mintedContract = null
       })
       .addCase(mintPOC20Tokens.fulfilled, (state, action) => {
         state.loading = false
@@ -143,8 +166,25 @@ const userSlice = createSlice({
         state.loading = false
         state.error = action.payload
       })
+      .addCase(buyPOC20Tokens.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(buyPOC20Tokens.fulfilled, (state, action) => {
+        state.loading = false
+        state.transactionStatus = action.payload
+      })
+      .addCase(buyPOC20Tokens.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
+      })
   },
 })
 
-export const { logout, updateMetamaskBalance } = userSlice.actions
+export const {
+  logout,
+  updateMetamaskBalance,
+  resetMintedContract,
+  resetTransactionStatus,
+} = userSlice.actions
 export default userSlice.reducer

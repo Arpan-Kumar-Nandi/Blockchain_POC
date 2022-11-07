@@ -10,6 +10,7 @@ const userInfoFromStorage = localStorage.getItem('userAccount')
       poc20balance: 0,
       mintedContract: null,
       buyTokensFromContracts: [],
+      transactionStatus: null,
     }
   : {
       loading: false,
@@ -19,6 +20,7 @@ const userInfoFromStorage = localStorage.getItem('userAccount')
       poc20balance: 0,
       mintedContract: null,
       buyTokensFromContracts: [],
+      transactionStatus: null,
     }
 
 const store = configureStore({

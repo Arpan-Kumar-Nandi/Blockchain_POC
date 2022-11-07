@@ -12,7 +12,7 @@
   display: flex;
   align-items: center;
   gap: 1.2rem;
-
+  cursor: pointer;
 }
 
 .dashboard-header-logo {
@@ -46,9 +46,9 @@
 }
 
 .dashboard-header-user-info-wallet-details {
-  margin-right: 9.6rem;
   transition: all 0.3s;
   color: #333;
+  cursor: pointer;
 }
 
 .dashboard-header-user-info-wallet-details:hover {
@@ -74,4 +74,14 @@
 
 .balance-unit {
   font-size: 1rem;
+}
+.logout-button {
+  color: #333;
+  font-size: 3.2rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.logout-button:hover {
+  color: #cf711f;
 }
