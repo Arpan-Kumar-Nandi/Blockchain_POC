@@ -183,3 +183,22 @@
   padding: 2.4rem 0rem;
   grid-column: 1 / -1;
 }
+.wallet-balance-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 3.2rem;
+  color: #fff
+}
+
+.wallet-balance-container h1 {
+  margin-top: 40rem;
+  font-size: 3.2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.wallet-balance-container p {
+  font-size: 6.2rem;
+  font-weight: 600;
+}

@@ -67,10 +67,7 @@ const Dashboard = () => {
               Account Balance: {metamaskBalance}{' '}
               <span className='balance-unit'>ETH</span>
             </p>
-            <p>
-              POC20 Balance: {poc20balance}{' '}
-              <span className='balance-unit'>ETH</span>
-            </p>
+            <p>POC20 Balance: {poc20balance} </p>
           </div>
           <MdOutlinePowerSettingsNew
             className='logout-button'

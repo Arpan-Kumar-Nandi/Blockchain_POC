@@ -28,6 +28,8 @@ const Wallet = () => {
   } = useSelector((state) => state.user)
 
   useEffect(() => {
+    dispatch(resetTransactionStatus())
+    dispatch(resetMintedContract())
     dispatch(fetchDeployedContractsToBuyFrom())
   }, [dispatch])
 
