@@ -30,18 +30,24 @@
   gap: 12.8rem;
   align-items: center;
 }
+.dashboard-header-user-info-user-details {
+  transition: all 0.3s;
+  color: #333;
+  cursor: pointer;
+}
 
+.dashboard-header-user-info-user-details:hover {
+  color: #cf711f;
+}
 .dashboard-header-user-info-user-details h4 {
   font-size: 1.8rem;
   font-weight: 500;
-  color: #333;
   margin-bottom: 0.5rem;
 }
 
 .dashboard-header-user-info-user-details p {
   font-size: 1.2rem;
   font-weight: 400;
-  color: #333;
   letter-spacing: 0.75px;
 }
 

@@ -8,6 +8,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { ProductDetailsBody } from './dto/productDetailsBody.dto';
 import { TransactionService } from './transaction.service';
 
 @UseGuards(JwtAuthGuard)
@@ -15,30 +16,36 @@ import { TransactionService } from './transaction.service';
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
-  @Get('/mintPOC20Tokens')
-  async mintPOC20Tokens(
-    @Query('exchangeRate') exchangeRate: number,
-    @Request() req,
-  ) {
-    return this.transactionService.mintPOC20Tokens(
-      exchangeRate,
-      req.user.publicAddress,
-    );
-  }
-
-  @Get('/fetchDeployedContractsToBuyFrom')
-  async fetchDeployedContractsToBuyFrom(@Request() req) {
-    return this.transactionService.fetchDeployedContractsToBuyFrom(
-      req.user.publicAddress,
-    );
-  }
-
   @Post('/buyPOC20Tokens')
   async buyPOC20Tokens(@Body() body, @Request() req) {
     return this.transactionService.buyPOC20Tokens(
-      body.contractAddress,
       req.user.publicAddress,
       body.ethersToSpend,
+    );
+  }
+
+  @Post('/createNFT')
+  async createNFT(@Body() body: ProductDetailsBody, @Request() req) {
+    return this.transactionService.createNFT(req.user.publicAddress, body);
+  }
+
+  @Get('/fetchMyNFTS')
+  async fetchMyNFTS(@Request() req) {
+    return this.transactionService.fetchMyNFTS(req.user.publicAddress);
+  }
+
+  @Get('/fetchAllItems')
+  async fetchAllItems(@Request() req) {
+    return this.transactionService.fetchAllItems(req.user.publicAddress);
+  }
+
+  @Post('/buyNFTToken')
+  async buyNFTToken(@Body() body, @Request() req) {
+    return this.transactionService.buyNFTToken(
+      body.contractAddress,
+      body.tokenId,
+      body.price,
+      req.user.publicAddress,
     );
   }
 }

@@ -20,11 +20,17 @@
 
 button {
   border: none;
-  outline: none
+  outline: none;
+    font-family: inherit;
+    cursor: pointer;
 }
 
 button:focus,
 button:hover {
   border: none;
   outline: none;
+}
+.highlight {
+  color: #cf711f;
+  font-weight: 700;
 }

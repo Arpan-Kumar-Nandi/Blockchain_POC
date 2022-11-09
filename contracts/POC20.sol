@@ -10,7 +10,6 @@ contract POC20 is ERC20 {
     address payable owner;
 
     constructor(uint exchangeRate) ERC20('POC_TOKEN', 'POC20') {
-        _mint(msg.sender, 1000 * 10 ** 18);
         tokensPerUnitEther = exchangeRate;
         owner = payable(msg.sender);
 
@@ -18,11 +17,13 @@ contract POC20 is ERC20 {
 
     function buyTokens() public payable {
         require(msg.value > 0, "You need exchange some ethers for POC20");
+        require(msg.sender != owner);
         uint convertEtherToPOCToken = msg.value * tokensPerUnitEther;
-        _transfer(owner, msg.sender, convertEtherToPOCToken);
+        payable(owner).transfer(msg.value);
+        _mint(msg.sender, convertEtherToPOCToken);
     }
 
-    function getBalance() public view returns(uint) {
-        return balanceOf(owner);
+    function transferTokens(address payable from, address payable to, uint amount) public payable {
+        _transfer(from, to, amount);
     }
 }

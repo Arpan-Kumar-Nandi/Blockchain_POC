@@ -22,7 +22,7 @@ const Login = () => {
   const { userAccount } = useSelector((state) => state.user)
 
   useEffect(() => {
-    userAccount && navigate('/dashboard')
+    userAccount && navigate('/dashboard/home')
   }, [userAccount, navigate])
 
   const handleLogin = async (e) => {

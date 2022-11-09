@@ -41,42 +41,69 @@ export const fetchPOC20Balance = createAsyncThunk(
   }
 )
 
-export const mintPOC20Tokens = createAsyncThunk(
-  'user/mintPOC20Tokens',
-  async (exchangeRate, thunkAPI) => {
-    try {
-      const { data } = await axios.get(
-        `/transaction/mintPOC20Tokens?exchangeRate=${exchangeRate}`
-      )
-      return data
-    } catch (err) {
-      return thunkAPI.rejectWithValue(err.response.data.message ?? err.message)
-    }
-  }
-)
-
-export const fetchDeployedContractsToBuyFrom = createAsyncThunk(
-  'user/fetchDeployedContractsToBuyFrom',
-  async (_, thunkAPI) => {
-    try {
-      const { data } = await axios.get(
-        '/transaction/fetchDeployedContractsToBuyFrom'
-      )
-      return data
-    } catch (err) {
-      return thunkAPI.rejectWithValue(err.response.data.message ?? err.message)
-    }
-  }
-)
-
 export const buyPOC20Tokens = createAsyncThunk(
   'user/buyPOC20Tokens',
-  async ({ contractAddress, ethersToSpend }, thunkAPI) => {
+  async ({ ethersToSpend }, thunkAPI) => {
     try {
       const { data } = await axios.post('/transaction/buyPOC20Tokens', {
-        contractAddress,
         ethersToSpend,
       })
+      return data
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data.message ?? err.message)
+    }
+  }
+)
+
+export const createNFT = createAsyncThunk(
+  'user/createNFT',
+  async (productDetails, thunkAPI) => {
+    try {
+      const { data } = await axios.post('/transaction/createNFT', {
+        ...productDetails,
+      })
+      return data
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data.message ?? err.message)
+    }
+  }
+)
+
+export const fetchMyNFTS = createAsyncThunk(
+  'user/fetchMyNFTS',
+  async (_, thunkAPI) => {
+    try {
+      const { data } = await axios.get('/transaction/fetchMyNFTS')
+      return data
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data.message ?? err.message)
+    }
+  }
+)
+
+export const fetchAllItems = createAsyncThunk(
+  'user/fetchAllItems',
+  async (_, thunkAPI) => {
+    try {
+      const { data } = await axios.get('/transaction/fetchAllItems')
+      return data
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data.message ?? err.message)
+    }
+  }
+)
+
+export const buyNFTToken = createAsyncThunk(
+  'user/buyNFTToken',
+  async ({ contractAddress, tokenId, price }, thunkAPI) => {
+    try {
+      const { data } = await axios.post('/transaction/buyNFTToken', {
+        contractAddress,
+        tokenId,
+        price,
+      })
+      await thunkAPI.dispatch(fetchAllItems())
+      await thunkAPI.dispatch(fetchPOC20Balance())
       return data
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data.message ?? err.message)
@@ -91,10 +118,11 @@ const userSlice = createSlice({
     userAccount: null,
     metamaskBalance: 0,
     poc20balance: 0,
-    mintedContract: null,
     error: null,
-    buyTokensFromContracts: [],
     transactionStatus: null,
+    createdNFT: null,
+    myNFTList: [],
+    allItemsList: [],
   },
   reducers: {
     logout(state) {
@@ -106,11 +134,11 @@ const userSlice = createSlice({
     updateMetamaskBalance(state, action) {
       state.metamaskBalance = action.payload
     },
-    resetMintedContract(state) {
-      state.mintedContract = null
-    },
     resetTransactionStatus(state) {
       state.transactionStatus = null
+    },
+    resetCreatedNFT(state) {
+      state.resetCreatedNFT = null
     },
   },
   extraReducers: (builder) => {
@@ -141,31 +169,6 @@ const userSlice = createSlice({
         state.loading = false
         state.error = action.payload
       })
-      .addCase(mintPOC20Tokens.pending, (state) => {
-        state.loading = true
-        state.error = null
-        state.mintedContract = null
-      })
-      .addCase(mintPOC20Tokens.fulfilled, (state, action) => {
-        state.loading = false
-        state.mintedContract = action.payload
-      })
-      .addCase(mintPOC20Tokens.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.payload
-      })
-      .addCase(fetchDeployedContractsToBuyFrom.pending, (state) => {
-        state.loading = true
-        state.error = null
-      })
-      .addCase(fetchDeployedContractsToBuyFrom.fulfilled, (state, action) => {
-        state.loading = false
-        state.buyTokensFromContracts = action.payload
-      })
-      .addCase(fetchDeployedContractsToBuyFrom.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.payload
-      })
       .addCase(buyPOC20Tokens.pending, (state) => {
         state.loading = true
         state.error = null
@@ -178,13 +181,53 @@ const userSlice = createSlice({
         state.loading = false
         state.error = action.payload
       })
+      .addCase(createNFT.pending, (state) => {
+        state.loading = true
+        state.error = null
+        state.createdNFT = null
+      })
+      .addCase(createNFT.fulfilled, (state, action) => {
+        state.loading = false
+        state.createdNFT = action.payload
+      })
+      .addCase(createNFT.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
+        state.createdNFT = null
+      })
+      .addCase(fetchMyNFTS.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(fetchMyNFTS.fulfilled, (state, action) => {
+        state.loading = false
+        state.myNFTList = action.payload
+      })
+      .addCase(fetchMyNFTS.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
+        state.myNFTList = null
+      })
+      .addCase(fetchAllItems.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(fetchAllItems.fulfilled, (state, action) => {
+        state.loading = false
+        state.allItemsList = action.payload
+      })
+      .addCase(fetchAllItems.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
+        state.allItemsList = []
+      })
   },
 })
 
 export const {
   logout,
   updateMetamaskBalance,
-  resetMintedContract,
+  resetCreatedNFT,
   resetTransactionStatus,
 } = userSlice.actions
 export default userSlice.reducer

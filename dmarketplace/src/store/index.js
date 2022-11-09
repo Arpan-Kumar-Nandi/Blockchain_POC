@@ -8,9 +8,10 @@ const userInfoFromStorage = localStorage.getItem('userAccount')
       error: null,
       metamaskBalance: 0,
       poc20balance: 0,
-      mintedContract: null,
-      buyTokensFromContracts: [],
       transactionStatus: null,
+      createdNFT: null,
+      myNFTList: [],
+      allItemsList: [],
     }
   : {
       loading: false,
@@ -18,9 +19,10 @@ const userInfoFromStorage = localStorage.getItem('userAccount')
       error: null,
       metamaskBalance: 0,
       poc20balance: 0,
-      mintedContract: null,
-      buyTokensFromContracts: [],
       transactionStatus: null,
+      createdNFT: null,
+      myNFTList: [],
+      allItemsList: [],
     }
 
 const store = configureStore({

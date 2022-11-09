@@ -1,0 +1,88 @@
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4.8rem;
+}
+
+.card {
+  border: 2px solid #fdf2e9;
+  border-radius: 11px;
+  overflow: hidden;
+  transition: all 0.4s;
+  padding: 3.2rem;
+  cursor: pointer;
+}
+
+.card:hover {
+  border: 2px solid #e67e22;
+}
+
+.card-tag {
+  margin-bottom: 1.8rem;
+}
+
+.tag {
+  padding: 0.4rem 0.8rem;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  color: #333;
+  border-radius: 100px;
+  font-weight: 600;
+}
+
+.card-available {
+  background-color: #51cf66;
+}
+
+.card-sold {
+  background-color: coral;
+}
+
+.card-title-date-container {
+  margin-bottom: 1.2rem;
+}
+
+.card-title {
+  font-size: 2.4rem;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.card-description {
+  font-size: 1.2rem;
+  line-height: 1.2;
+  color: #333;
+  font-weight: 400;
+  margin-bottom: 1.8rem;
+}
+
+.card-date {
+  font-weight: 500;
+  font-size: 1.2rem;
+}
+
+.card-price {
+  font-size: 4.8rem;
+  font-weight: 600;
+}
+
+.price-unit {
+  font-size: 1.2rem;
+  margin-left: 1.2rem;
+}
+
+.card-owner {
+  margin-top: 1.8rem;
+  word-break: break-all;
+}
+
+.card-buy-button {
+  margin-top: 2.4rem;
+  padding: 1.2rem 2.4rem;
+  border-radius: 9px;
+  font-weight: 600;
+  background-color: #e67e22;
+  color: #fff;
+  font-size: 2rem;
+}

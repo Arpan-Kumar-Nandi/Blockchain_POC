@@ -37,14 +37,14 @@ const Dashboard = () => {
 
   const onDisconnect = async () => {
     dispatch(logout())
-    navigate('/dashboard')
+    navigate('/dashboard/home')
   }
   return (
     <>
       <header className='dashboard-header'>
         <section
           className='dashboard-header-logo-container'
-          onClick={() => navigate('/dashboard')}
+          onClick={() => navigate('/dashboard/home')}
         >
           <img
             src={mainlogo}
@@ -54,7 +54,10 @@ const Dashboard = () => {
           <span className='dashboard-header-logo-title'>DMarketplace</span>
         </section>
         <section className='dashboard-header-user-info-container'>
-          <div className='dashboard-header-user-info-user-details'>
+          <div
+            className='dashboard-header-user-info-user-details'
+            onClick={() => navigate('/dashboard/account/register')}
+          >
             <h4>Hello {userAccount?.username}</h4>
             <p>{userAccount?.publicAddress}</p>
           </div>

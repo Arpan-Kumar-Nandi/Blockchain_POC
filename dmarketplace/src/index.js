@@ -9,6 +9,11 @@ import './index.css'
 import store from './store/index'
 import Dashboard from './screens/Dashboard/Dashboard'
 import Wallet from './screens/Dashboard/components/Wallet'
+import Home from './screens/Dashboard/components/Home'
+import Account from './screens/Dashboard/components/Account'
+import RegisterAsset from './screens/Dashboard/components/RegisterAsset'
+import MyItems from './screens/Dashboard/components/MyItems'
+import ProductDetails from './screens/Dashboard/components/ProductDetails'
 
 const container = document.getElementById('root')
 const root = createRoot(container)
@@ -29,6 +34,28 @@ const router = createBrowserRouter([
       {
         path: 'wallet',
         element: <Wallet />,
+      },
+      {
+        path: 'home',
+        element: <Home />,
+      },
+      {
+        path: 'product/:id',
+        element: <ProductDetails />,
+      },
+      {
+        path: 'account',
+        element: <Account />,
+        children: [
+          {
+            path: 'register',
+            element: <RegisterAsset />,
+          },
+          {
+            path: 'myitems',
+            element: <MyItems />,
+          },
+        ],
       },
     ],
   },

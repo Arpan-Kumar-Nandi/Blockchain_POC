@@ -1,52 +1,28 @@
+import { ProductDetailsSmartContractDeploy } from './../transaction/dto/productDetailsSmartContractDeploy.dto';
 import Web3 from 'web3';
 import { AbiItem, fromWei, toWei } from 'web3-utils';
 import POC20 from '../contracts/POC20.json';
+import POC721 from '../contracts/POC721.json';
 
 export default class Web3Util {
   private readonly web3 = new Web3('http://127.0.0.1:7545');
-  private readonly networkID = 5777;
 
-  async fetchAccounts() {
-    this.web3.eth.getAccounts();
-  }
-
-  async poc20(contractAddress: string) {
-    return new this.web3.eth.Contract(POC20.abi as AbiItem[], contractAddress);
-  }
-
-  async mintPOC20Tokens(exchangeRate: number, publicAddress: string) {
-    const deployedContract = await new this.web3.eth.Contract(
+  async poc20() {
+    return new this.web3.eth.Contract(
       POC20.abi as AbiItem[],
-    )
-      .deploy({ data: POC20.bytecode, arguments: [exchangeRate] })
-      .send({ gas: 1500000, from: publicAddress });
-
-    return deployedContract;
+      '0x85860320dE6Df0D9Bb9B6AC667D82Aa90Aee25C1',
+    );
   }
 
-  async getPOC20Balance(publicAddress: string, contractAddress: string) {
-    const poc20 = await this.poc20(contractAddress);
+  async getPOC20Balance(publicAddress: string) {
+    const poc20 = await this.poc20();
     const balance = await poc20.methods.balanceOf(publicAddress).call();
     const balanceinEther = fromWei(balance, 'ether');
     return parseFloat(balanceinEther);
   }
 
-  async getPOC20ContractBalance(contractAddress: string) {
-    const poc20 = await this.poc20(contractAddress);
-    const balance = await poc20.methods.getBalance().call();
-    const balanceinEther = fromWei(balance, 'ether');
-
-    const exchangeRate = await poc20.methods.tokensPerUnitEther().call();
-
-    return { balance: parseFloat(balanceinEther), exchangeRate };
-  }
-
-  async buyPOC20Tokens(
-    contractAddress: string,
-    publicAddress: string,
-    ethersToSpend: number,
-  ) {
-    const poc20 = await this.poc20(contractAddress);
+  async buyPOC20Tokens(publicAddress: string, ethersToSpend: number) {
+    const poc20 = await this.poc20();
     try {
       const status = await poc20.methods.buyTokens().send({
         from: publicAddress,
@@ -56,5 +32,59 @@ export default class Web3Util {
     } catch (err) {
       console.log(err);
     }
+  }
+
+  async createNFT(
+    publicAddress: string,
+    productDetails: ProductDetailsSmartContractDeploy,
+  ) {
+    const deployedContract = await new this.web3.eth.Contract(
+      POC721.abi as AbiItem[],
+    )
+      .deploy({
+        data: POC721.bytecode,
+        arguments: [
+          productDetails.tokenId,
+          productDetails.title,
+          productDetails.description,
+          toWei(productDetails.price.toString(), 'ether'),
+          productDetails.date,
+          productDetails.address,
+        ],
+      })
+      .send({ from: publicAddress, gas: 4712388, gasPrice: '100000000000' });
+
+    return deployedContract;
+  }
+
+  async fetchNFTDetails(contractAddress: string, tokenId: number) {
+    const nft721 = await new this.web3.eth.Contract(
+      POC721.abi as AbiItem[],
+      contractAddress,
+    );
+
+    return nft721.methods.item(tokenId).call();
+  }
+
+  async buyNFTToken(
+    contractAddress: string,
+    tokenId: number,
+    price: string,
+    publicAddress: string,
+  ) {
+    const nft721 = await new this.web3.eth.Contract(
+      POC721.abi as AbiItem[],
+      contractAddress,
+    );
+
+    const transaction = await nft721.methods.buyItem(tokenId).send({
+      from: publicAddress,
+      value: toWei(price, 'ether'),
+      gas: 4712388,
+      gasPrice: '100000000000',
+    });
+
+    console.log(transaction);
+    return transaction;
   }
 }

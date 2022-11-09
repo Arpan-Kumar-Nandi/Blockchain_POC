@@ -1,10 +1,10 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-export type ContractDocument = Contract & Document;
+export type NFT721Document = NFT721 & Document;
 
 @Schema()
-export class Contract {
+export class NFT721 {
   @Prop({ required: true })
   name: string;
 
@@ -12,10 +12,10 @@ export class Contract {
   contractAddress: string;
 
   @Prop({ require: true })
-  mintedBy: string;
+  owner: string;
 
-  @Prop()
-  boughtBy: string[];
+  @Prop({ require: true, unique: true })
+  tokenId: string;
 }
 
-export const ContractSchema = SchemaFactory.createForClass(Contract);
+export const NFT721Schema = SchemaFactory.createForClass(NFT721);
