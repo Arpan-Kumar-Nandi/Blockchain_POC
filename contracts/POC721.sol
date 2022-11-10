@@ -25,8 +25,6 @@ contract POC721 is ERC721 {
 
     mapping(uint => address[]) public tokenOwnerHistory;
     mapping(uint => uint[]) public tokenPriceHistory;
-
-
     mapping(uint256 => Item) public item;
 
     constructor(uint tokenId, string memory title, string memory description, uint price, string memory date, address POC20Address) ERC721('POC_NFT_TOKEN', 'POC721') {
@@ -40,15 +38,14 @@ contract POC721 is ERC721 {
 
     function buyItem (uint tokenId) public payable{
         require(msg.sender != owner, "You cannot buy your own item");
-        require(msg.value == item[tokenId].price, "You must pay the listed price");
         require(item[tokenId].status == ItemStatus.Available, "You cannot buy an item which is not available");
         //payable(owner).transfer(msg.value);
-        currencyToken.transferTokens(payable(msg.sender),payable(owner),msg.value);
+        currencyToken.transferTokens(payable(msg.sender),payable(owner),item[tokenId].price);
         _transfer(owner, msg.sender, tokenId);
         item[tokenId].owner = payable(msg.sender);
         item[tokenId].status = ItemStatus.Sold;
         tokenOwnerHistory[tokenId].push(msg.sender);
-        tokenPriceHistory[tokenId].push(msg.value);
+        tokenPriceHistory[tokenId].push(item[tokenId].price);
         owner = payable(msg.sender);
     }
 

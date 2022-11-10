@@ -65,3 +65,19 @@
 .width {
   max-width: 100% !important;
 }
+.owner-address {
+  word-break: break-all;
+  margin-top: 1rem;
+  margin-bottom: 1.6rem;
+}
+
+.history-cards-container {
+  margin-top: 2.4rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr 30px);
+}
+
+.arrow-history {
+  align-self: center;
+  font-size: 3.2rem;
+}

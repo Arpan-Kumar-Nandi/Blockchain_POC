@@ -6,6 +6,7 @@ import {
   resellNFTToken,
 } from '../../../store/user/userSlice'
 import './ProductDetails.css'
+import { MdArrowRightAlt } from 'react-icons/md'
 
 const ProductDetails = () => {
   const { nftItem, userAccount } = useSelector((state) => state.user)
@@ -54,10 +55,21 @@ const ProductDetails = () => {
     let display = []
     for (let i = 0; i < itemOwnerHistory.length; i++) {
       display.push(
-        <div key={itemOwnerHistory[i]}>
-          <h1>{itemOwnerHistory[i]}</h1>
-          <p>Price {itemPriceHistory[i]}</p>
-        </div>
+        <>
+          <div
+            key={`itemOwnerHistory[i]- ${Math.random()}`}
+            className='card history-card'
+          >
+            <h1>Owner</h1>
+            <p className='owner-address'>
+              <span className='highlight'>{itemOwnerHistory[i]}</span>
+            </p>
+            <span className='price'>{itemPriceHistory[i]}</span>POC20 tokens
+          </div>
+          {i + 1 !== itemOwnerHistory.length && (
+            <MdArrowRightAlt className='arrow-history' />
+          )}
+        </>
       )
     }
     return display
@@ -136,7 +148,10 @@ const ProductDetails = () => {
           )}
       </div>
       <div className='product-details-history-container'>
-        {nftItem && displayHistory()}
+        <h1 className='about-title'>Token history</h1>
+        <div className='history-cards-container'>
+          {nftItem && displayHistory()}
+        </div>
       </div>
     </div>
   )
