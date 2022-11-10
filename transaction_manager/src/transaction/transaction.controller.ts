@@ -44,6 +44,14 @@ export class TransactionController {
     return this.transactionService.buyNFTToken(
       body.contractAddress,
       body.tokenId,
+      req.user.publicAddress,
+    );
+  }
+  @Post('/resellNFTToken')
+  async resellNFTToken(@Body() body, @Request() req) {
+    return this.transactionService.resellNFTToken(
+      body.contractAddress,
+      body.tokenId,
       body.price,
       req.user.publicAddress,
     );

@@ -64,16 +64,34 @@ export default class Web3Util {
     );
 
     const itemDetails = await nft721.methods.item(tokenId).call();
-    const itemOwnerHistory = await nft721.methods.getTokenOwnerHistory(tokenId).call();
+    const itemOwnerHistory = await nft721.methods
+      .getTokenOwnerHistory(tokenId)
+      .call();
     const itemPriceHistory = await nft721.methods
       .getPriceHistory(tokenId)
       .call();
 
-    return { itemDetails, itemOwnerHistory, itemPriceHistory}
+    return { itemDetails, itemOwnerHistory, itemPriceHistory };
   }
 
-
   async buyNFTToken(
+    contractAddress: string,
+    tokenId: number,
+    publicAddress: string,
+  ) {
+    const nft721 = await new this.web3.eth.Contract(
+      POC721.abi as AbiItem[],
+      contractAddress,
+    );
+
+    const transaction = await nft721.methods.buyItem(tokenId).send({
+      from: publicAddress,
+      gas: 4712388,
+      gasPrice: '100000000000',
+    });
+    return transaction;
+  }
+  async resellNFTToken(
     contractAddress: string,
     tokenId: number,
     price: string,
@@ -84,12 +102,15 @@ export default class Web3Util {
       contractAddress,
     );
 
-    const transaction = await nft721.methods.buyItem(tokenId).send({
-      from: publicAddress,
-      value: toWei(price, 'ether'),
-      gas: 4712388,
-      gasPrice: '100000000000',
-    });
+    const priceinwei = toWei(price, 'ether');
+
+    const transaction = await nft721.methods
+      .resellItem(tokenId, priceinwei)
+      .send({
+        from: publicAddress,
+        gas: 4712388,
+        gasPrice: '100000000000',
+      });
     return transaction;
   }
 }

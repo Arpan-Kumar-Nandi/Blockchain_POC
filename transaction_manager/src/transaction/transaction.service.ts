@@ -83,17 +83,29 @@ export class TransactionService {
     return nftDetails;
   }
 
-  async buyNFTToken(contractAddress, tokenId, price, publicAddress) {
+  async buyNFTToken(contractAddress, tokenId, publicAddress) {
     try {
       const transaction = await this.web3Util.buyNFTToken(
         contractAddress,
         parseInt(tokenId),
-        price.toString(),
         publicAddress,
       );
       const nft = await this.nft721model.findOne({ contractAddress });
       nft.owner = publicAddress;
       nft.save();
+      return transaction;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  async resellNFTToken(contractAddress, tokenId, price, publicAddress) {
+    try {
+      const transaction = await this.web3Util.resellNFTToken(
+        contractAddress,
+        parseInt(tokenId),
+        price.toString(),
+        publicAddress,
+      );
       return transaction;
     } catch (err) {
       console.log(err);

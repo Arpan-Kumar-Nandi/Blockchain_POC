@@ -111,6 +111,23 @@ export const buyNFTToken = createAsyncThunk(
   }
 )
 
+export const resellNFTToken = createAsyncThunk(
+  'user/resellNFTToken',
+  async ({ contractAddress, tokenId, price }, thunkAPI) => {
+    try {
+      const { data } = await axios.post('/transaction/resellNFTToken', {
+        contractAddress,
+        tokenId,
+        price,
+      })
+      await thunkAPI.dispatch(fetchAllItems())
+      return data
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data.message ?? err.message)
+    }
+  }
+)
+
 export const fetchNFTItemDetails = createAsyncThunk(
   'user/fetchNFTItemDetails',
   async ({ contractAddress, tokenId }, thunkAPI) => {

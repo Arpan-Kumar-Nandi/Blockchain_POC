@@ -1,16 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { buyNFTToken, fetchNFTItemDetails } from '../../../store/user/userSlice'
+import {
+  buyNFTToken,
+  fetchNFTItemDetails,
+  resellNFTToken,
+} from '../../../store/user/userSlice'
 import './ProductDetails.css'
 
 const ProductDetails = () => {
   const { nftItem, userAccount } = useSelector((state) => state.user)
   const dispatch = useDispatch()
+  const [price, setPrice] = useState(nftItem?.price || 1)
 
   const handleBuyNFT = async (e, item) => {
     e.preventDefault()
     e.stopPropagation()
-
     await dispatch(
       buyNFTToken({
         contractAddress: item.contractAddress,
@@ -18,7 +22,25 @@ const ProductDetails = () => {
         price: item.price,
       })
     )
+    dispatch(
+      fetchNFTItemDetails({
+        contractAddress: item.contractAddress,
+        tokenId: item.tokenId,
+      })
+    )
+  }
 
+  const handleResellNFT = async (e, item) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    await dispatch(
+      resellNFTToken({
+        contractAddress: item.contractAddress,
+        tokenId: item.tokenId,
+        price,
+      })
+    )
     dispatch(
       fetchNFTItemDetails({
         contractAddress: item.contractAddress,
@@ -91,10 +113,8 @@ const ProductDetails = () => {
             <div className='product-details-resell-container'>
               <div className='nft-form-field'>
                 <label htmlFor='price'>
-                  Price{' '}
-                  <span className='highlight small'>
-                    (in terms of POC20 tokens)
-                  </span>
+                  Enter Price{' '}
+                  <span className='highlight small'>(POC20 tokens)</span>
                 </label>
                 <input
                   className='width'
@@ -102,12 +122,12 @@ const ProductDetails = () => {
                   id='price'
                   name='price'
                   min={1}
-                  // value={price}
-                  // onChange={onChangePrice}
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
                 />
                 <button
                   className='card-buy-button width'
-                  onClick={(e) => handleBuyNFT(e, nftItem)}
+                  onClick={(e) => handleResellNFT(e, nftItem)}
                 >
                   Resell
                 </button>
