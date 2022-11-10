@@ -15,7 +15,7 @@ const Account = () => {
           My Items
         </button>
       </section>
-      <section className='account-outlet'>
+      <section>
         <Outlet />
       </section>
     </article>

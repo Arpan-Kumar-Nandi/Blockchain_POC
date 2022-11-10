@@ -85,4 +85,5 @@
   background-color: #e67e22;
   color: #fff;
   font-size: 2rem;
+  z-index: 999;
 }

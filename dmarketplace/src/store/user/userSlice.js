@@ -111,6 +111,21 @@ export const buyNFTToken = createAsyncThunk(
   }
 )
 
+export const fetchNFTItemDetails = createAsyncThunk(
+  'user/fetchNFTItemDetails',
+  async ({ contractAddress, tokenId }, thunkAPI) => {
+    try {
+      const { data } = await axios.post('/transaction/fetchNFTItemDetails', {
+        contractAddress,
+        tokenId,
+      })
+      return data
+    } catch (err) {
+      return thunkAPI.rejectWithValue(err.response.data.message ?? err.message)
+    }
+  }
+)
+
 const userSlice = createSlice({
   name: 'user',
   initialState: {
@@ -123,6 +138,7 @@ const userSlice = createSlice({
     createdNFT: null,
     myNFTList: [],
     allItemsList: [],
+    nftItem: null,
   },
   reducers: {
     logout(state) {
@@ -220,6 +236,19 @@ const userSlice = createSlice({
         state.loading = false
         state.error = action.payload
         state.allItemsList = []
+      })
+      .addCase(fetchNFTItemDetails.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(fetchNFTItemDetails.fulfilled, (state, action) => {
+        state.loading = false
+        state.nftItem = action.payload
+      })
+      .addCase(fetchNFTItemDetails.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
+        state.nftItem = null
       })
   },
 })

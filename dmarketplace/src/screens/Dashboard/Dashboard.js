@@ -23,7 +23,7 @@ const Dashboard = () => {
   )
 
   const getMetamaskBalance = useCallback(async () => {
-    let ethBalance = await web3.eth.getBalance(userAccount.publicAddress)
+    let ethBalance = await web3.eth.getBalance(userAccount?.publicAddress)
     ethBalance = web3.utils.fromWei(ethBalance, 'ether')
 
     dispatch(updateMetamaskBalance(ethBalance))
@@ -78,7 +78,7 @@ const Dashboard = () => {
           />
         </section>
       </header>
-      <main>
+      <main className='main-dashboard-container'>
         <Outlet />
       </main>
     </>

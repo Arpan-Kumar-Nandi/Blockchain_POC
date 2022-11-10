@@ -45,7 +45,7 @@ const RegisterAsset = () => {
   }
 
   return (
-    <>
+    <div className='register-asset-container'>
       <h1 className='nft-heading'>Enter item details and create a NFT</h1>
       <form onSubmit={handleRegister} className='nft-form'>
         <div className='nft-form-field'>
@@ -94,7 +94,7 @@ const RegisterAsset = () => {
           </p>
         )}
       </form>
-    </>
+    </div>
   )
 }
 

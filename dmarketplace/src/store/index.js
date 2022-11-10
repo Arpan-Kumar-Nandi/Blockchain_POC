@@ -12,6 +12,7 @@ const userInfoFromStorage = localStorage.getItem('userAccount')
       createdNFT: null,
       myNFTList: [],
       allItemsList: [],
+      nftItem: null,
     }
   : {
       loading: false,
@@ -23,6 +24,7 @@ const userInfoFromStorage = localStorage.getItem('userAccount')
       createdNFT: null,
       myNFTList: [],
       allItemsList: [],
+      nftItem: null,
     }
 
 const store = configureStore({

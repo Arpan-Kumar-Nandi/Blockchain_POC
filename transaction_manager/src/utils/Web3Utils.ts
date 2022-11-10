@@ -63,8 +63,15 @@ export default class Web3Util {
       contractAddress,
     );
 
-    return nft721.methods.item(tokenId).call();
+    const itemDetails = await nft721.methods.item(tokenId).call();
+    const itemOwnerHistory = await nft721.methods.getTokenOwnerHistory(tokenId).call();
+    const itemPriceHistory = await nft721.methods
+      .getPriceHistory(tokenId)
+      .call();
+
+    return { itemDetails, itemOwnerHistory, itemPriceHistory}
   }
+
 
   async buyNFTToken(
     contractAddress: string,
@@ -83,8 +90,6 @@ export default class Web3Util {
       gas: 4712388,
       gasPrice: '100000000000',
     });
-
-    console.log(transaction);
     return transaction;
   }
 }

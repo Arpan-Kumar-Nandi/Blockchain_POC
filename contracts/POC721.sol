@@ -65,4 +65,7 @@ contract POC721 is ERC721 {
     function getTokenOwnerHistory(uint tokenId) external view returns(address[] memory) {
         return tokenOwnerHistory[tokenId];
     }
+    function getPriceHistory(uint tokenId) external view returns(uint[] memory) {
+        return tokenPriceHistory[tokenId];
+    }
 }

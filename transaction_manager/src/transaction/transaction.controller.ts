@@ -36,7 +36,7 @@ export class TransactionController {
 
   @Get('/fetchAllItems')
   async fetchAllItems(@Request() req) {
-    return this.transactionService.fetchAllItems(req.user.publicAddress);
+    return this.transactionService.fetchAllItems();
   }
 
   @Post('/buyNFTToken')
@@ -46,6 +46,13 @@ export class TransactionController {
       body.tokenId,
       body.price,
       req.user.publicAddress,
+    );
+  }
+  @Post('/fetchNFTItemDetails')
+  async fetchNFTItemDetails(@Body() body) {
+    return this.transactionService.fetchNFTItemDetails(
+      body.contractAddress,
+      body.tokenId,
     );
   }
 }

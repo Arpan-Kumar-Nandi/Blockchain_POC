@@ -43,7 +43,7 @@ export class TransactionService {
 
     const contractAddress = deployedContract.options.address;
 
-    const contract = this.nft721model.create({
+    const contract = await this.nft721model.create({
       name,
       contractAddress,
       owner: publicAddress,
@@ -57,27 +57,28 @@ export class TransactionService {
     const nfts = await this.nft721model.find({ owner: publicAddress });
     let nftDetails = [];
     for (const nft of nfts) {
-      const details = await this.web3Util.fetchNFTDetails(
+      const { itemDetails } = await this.web3Util.fetchNFTDetails(
         nft.contractAddress,
         parseInt(nft.tokenId),
       );
-      details.contractAddress = nft.contractAddress;
-      details.price = fromWei(details.price, 'ether');
-      nftDetails.push(details);
+      itemDetails.contractAddress = nft.contractAddress;
+      itemDetails.price = fromWei(itemDetails.price, 'ether');
+      nftDetails.push(itemDetails);
     }
     return nftDetails;
   }
-  async fetchAllItems(publicAddress: string) {
-    const nfts = await this.nft721model.find({ owner: { $ne: publicAddress } });
+
+  async fetchAllItems() {
+    const nfts = await this.nft721model.find({});
     let nftDetails = [];
     for (const nft of nfts) {
-      const details = await this.web3Util.fetchNFTDetails(
+      const { itemDetails } = await this.web3Util.fetchNFTDetails(
         nft.contractAddress,
         parseInt(nft.tokenId),
       );
-      details.contractAddress = nft.contractAddress;
-      details.price = fromWei(details.price, 'ether');
-      nftDetails.push(details);
+      itemDetails.contractAddress = nft.contractAddress;
+      itemDetails.price = fromWei(itemDetails.price, 'ether');
+      nftDetails.push(itemDetails);
     }
     return nftDetails;
   }
@@ -87,12 +88,33 @@ export class TransactionService {
       const transaction = await this.web3Util.buyNFTToken(
         contractAddress,
         parseInt(tokenId),
-        price,
+        price.toString(),
         publicAddress,
       );
+      const nft = await this.nft721model.findOne({ contractAddress });
+      nft.owner = publicAddress;
+      nft.save();
       return transaction;
     } catch (err) {
       console.log(err);
     }
+  }
+  async fetchNFTItemDetails(contractAddress, tokenId) {
+    let { itemDetails, itemOwnerHistory, itemPriceHistory } =
+      await this.web3Util.fetchNFTDetails(contractAddress, parseInt(tokenId));
+
+    itemDetails.contractAddress = contractAddress;
+    itemDetails.price = fromWei(itemDetails.price, 'ether');
+
+    itemPriceHistory = itemPriceHistory.map((item) =>
+      fromWei(item.toString(), 'ether'),
+    );
+
+    const details = {
+      ...itemDetails,
+      itemOwnerHistory,
+      itemPriceHistory,
+    };
+    return details;
   }
 }
