@@ -56,7 +56,7 @@ module.exports = {
    *
    * $ truffle test --network <network-name>
    */
-  contracts_build_directory : './transaction_manager/src/contracts',
+  contracts_build_directory: './dmarketplace/src/contracts',
   networks: {
     // Useful for testing. The `development` name is special - truffle uses it by default
     // if it's defined here and no other network is specified at the command line.
@@ -65,9 +65,9 @@ module.exports = {
     // options below to some value.
     //
     development: {
-     host: "127.0.0.1",     // Localhost (default: none)
-     port: 7545,            // Standard Ethereum port (default: none)
-     network_id: "*",       // Any network (default: none)
+      host: '127.0.0.1', // Localhost (default: none)
+      port: 7545, // Standard Ethereum port (default: none)
+      network_id: '*', // Any network (default: none)
     },
     //
     // An additional network, but with some advanced options…
@@ -106,7 +106,7 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "0.8.17" // Fetch exact version from solc-bin (default: truffle's version)
+      version: '0.8.17', // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       // settings: {          // See the solidity docs for advice about optimization and evmVersion
       //  optimizer: {
@@ -115,8 +115,8 @@ module.exports = {
       //  },
       //  evmVersion: "byzantium"
       // }
-    }
-  }
+    },
+  },
 
   // Truffle DB is currently disabled by default; to enable it, change enabled:
   // false to enabled: true. The default storage location can also be
@@ -138,4 +138,4 @@ module.exports = {
   //     }
   //   }
   // }
-};
+}
