@@ -8,7 +8,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { ProductDetailsBody } from './dto/productDetailsBody.dto';
+import { NFT721Contract } from './dto/NFT721Contract.dto';
 import { TransactionService } from './transaction.service';
 
 @UseGuards(JwtAuthGuard)
@@ -16,17 +16,22 @@ import { TransactionService } from './transaction.service';
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
-  @Post('/buyPOC20Tokens')
-  async buyPOC20Tokens(@Body() body, @Request() req) {
-    return this.transactionService.buyPOC20Tokens(
-      req.user.publicAddress,
-      body.ethersToSpend,
-    );
+  // @Post('/buyPOC20Tokens')
+  // async buyPOC20Tokens(@Body() body, @Request() req) {
+  //   return this.transactionService.buyPOC20Tokens(
+  //     req.user.publicAddress,
+  //     body.ethersToSpend,
+  //   );
+  // }
+
+  @Get('/generateNFTToken')
+  createNFTToken() {
+    return this.transactionService.generateNFTToken();
   }
 
   @Post('/createNFT')
-  async createNFT(@Body() body: ProductDetailsBody, @Request() req) {
-    return this.transactionService.createNFT(req.user.publicAddress, body);
+  async createNFT(@Body() body: NFT721Contract, @Request() req) {
+    return this.transactionService.createNFT(body);
   }
 
   @Get('/fetchMyNFTS')
@@ -43,7 +48,6 @@ export class TransactionController {
   async buyNFTToken(@Body() body, @Request() req) {
     return this.transactionService.buyNFTToken(
       body.contractAddress,
-      body.tokenId,
       req.user.publicAddress,
     );
   }

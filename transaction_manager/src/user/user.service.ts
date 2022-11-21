@@ -66,7 +66,7 @@ export class UserService {
     return user;
   }
 
-  async getPOC20Balance(publicAddress) {
-    return this.web3Util.getPOC20Balance(publicAddress);
-  }
+  // async getPOC20Balance(publicAddress) {
+  //   return this.web3Util.getPOC20Balance(publicAddress);
+  // }
 }

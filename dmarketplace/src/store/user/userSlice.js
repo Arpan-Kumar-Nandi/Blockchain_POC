@@ -3,14 +3,9 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 export const fetchUserDetails = createAsyncThunk(
   'user/whoami',
-  async ({ metamaskBalance, chainId, accessToken }, thunkAPI) => {
+  async ({ metamaskBalance, poc20balance, chainId, accessToken }, thunkAPI) => {
     try {
       const { data } = await axios.get('/user/whoami', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      const { data: poc20balance } = await axios.get('/user/getpoc20balance', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -29,31 +24,31 @@ export const fetchUserDetails = createAsyncThunk(
   }
 )
 
-export const fetchPOC20Balance = createAsyncThunk(
-  'user/POC20Balance',
-  async (_, thunkAPI) => {
-    try {
-      const { data } = await axios.get('/user/getpoc20balance')
-      return data
-    } catch (err) {
-      return thunkAPI.rejectWithValue(err.response.data.message ?? err.message)
-    }
-  }
-)
+// export const fetchPOC20Balance = createAsyncThunk(
+//   'user/POC20Balance',
+//   async (_, thunkAPI) => {
+//     try {
+//       const { data } = await axios.get('/user/getpoc20balance')
+//       return data
+//     } catch (err) {
+//       return thunkAPI.rejectWithValue(err.response.data.message ?? err.message)
+//     }
+//   }
+// )
 
-export const buyPOC20Tokens = createAsyncThunk(
-  'user/buyPOC20Tokens',
-  async ({ ethersToSpend }, thunkAPI) => {
-    try {
-      const { data } = await axios.post('/transaction/buyPOC20Tokens', {
-        ethersToSpend,
-      })
-      return data
-    } catch (err) {
-      return thunkAPI.rejectWithValue(err.response.data.message ?? err.message)
-    }
-  }
-)
+// export const buyPOC20Tokens = createAsyncThunk(
+//   'user/buyPOC20Tokens',
+//   async ({ ethersToSpend }, thunkAPI) => {
+//     try {
+//       const { data } = await axios.post('/transaction/buyPOC20Tokens', {
+//         ethersToSpend,
+//       })
+//       return data
+//     } catch (err) {
+//       return thunkAPI.rejectWithValue(err.response.data.message ?? err.message)
+//     }
+//   }
+// )
 
 export const createNFT = createAsyncThunk(
   'user/createNFT',
@@ -103,7 +98,7 @@ export const buyNFTToken = createAsyncThunk(
         price,
       })
       await thunkAPI.dispatch(fetchAllItems())
-      await thunkAPI.dispatch(fetchPOC20Balance())
+      //await thunkAPI.dispatch(fetchPOC20Balance())
       return data
     } catch (err) {
       return thunkAPI.rejectWithValue(err.response.data.message ?? err.message)
@@ -167,6 +162,12 @@ const userSlice = createSlice({
     updateMetamaskBalance(state, action) {
       state.metamaskBalance = action.payload
     },
+    updatePOC20Balance(state, action) {
+      state.poc20balance = action.payload
+    },
+    updateTransactionStatus(state, action) {
+      state.transactionStatus = action.payload
+    },
     resetTransactionStatus(state) {
       state.transactionStatus = null
     },
@@ -190,30 +191,30 @@ const userSlice = createSlice({
         state.loading = false
         state.error = action.payload
       })
-      .addCase(fetchPOC20Balance.pending, (state) => {
-        state.loading = true
-        state.error = null
-      })
-      .addCase(fetchPOC20Balance.fulfilled, (state, action) => {
-        state.loading = false
-        state.poc20balance = action.payload
-      })
-      .addCase(fetchPOC20Balance.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.payload
-      })
-      .addCase(buyPOC20Tokens.pending, (state) => {
-        state.loading = true
-        state.error = null
-      })
-      .addCase(buyPOC20Tokens.fulfilled, (state, action) => {
-        state.loading = false
-        state.transactionStatus = action.payload
-      })
-      .addCase(buyPOC20Tokens.rejected, (state, action) => {
-        state.loading = false
-        state.error = action.payload
-      })
+      // .addCase(fetchPOC20Balance.pending, (state) => {
+      //   state.loading = true
+      //   state.error = null
+      // })
+      // .addCase(fetchPOC20Balance.fulfilled, (state, action) => {
+      //   state.loading = false
+      //   state.poc20balance = action.payload
+      // })
+      // .addCase(fetchPOC20Balance.rejected, (state, action) => {
+      //   state.loading = false
+      //   state.error = action.payload
+      // })
+      // .addCase(buyPOC20Tokens.pending, (state) => {
+      //   state.loading = true
+      //   state.error = null
+      // })
+      // .addCase(buyPOC20Tokens.fulfilled, (state, action) => {
+      //   state.loading = false
+      //   state.transactionStatus = action.payload
+      // })
+      // .addCase(buyPOC20Tokens.rejected, (state, action) => {
+      //   state.loading = false
+      //   state.error = action.payload
+      // })
       .addCase(createNFT.pending, (state) => {
         state.loading = true
         state.error = null
@@ -273,6 +274,8 @@ const userSlice = createSlice({
 export const {
   logout,
   updateMetamaskBalance,
+  updatePOC20Balance,
+  updateTransactionStatus,
   resetCreatedNFT,
   resetTransactionStatus,
 } = userSlice.actions

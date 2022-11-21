@@ -8,6 +8,9 @@ import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router'
 import { useSelector } from 'react-redux'
 import { MdEast } from 'react-icons/md'
+import Web3Util from '../../utils/Web3Utils'
+
+const web3Util = new Web3Util()
 
 const Login = () => {
   const dispatch = useDispatch()
@@ -17,6 +20,7 @@ const Login = () => {
   const [username, setUsername] = useState('')
   const [publicWalletAddress, setPublicWalletAddress] = useState('')
   const [ethBalance, setEthBalance] = useState('')
+  const [poc20balance, setPoc20Balance] = useState('')
   const [chainId, setChainId] = useState('')
 
   const { userAccount } = useSelector((state) => state.user)
@@ -31,10 +35,11 @@ const Login = () => {
     try {
       const accounts = await web3.eth.getAccounts()
       const chainId = await web3.eth.getChainId()
-      let ethBalance = await web3.eth.getBalance(accounts[0])
-      ethBalance = web3.utils.fromWei(ethBalance, 'ether')
+      const ethBalance = await web3Util.getMetamaskBalance(accounts[0])
+      const poc20balance = await web3Util.getPOC20Balance(accounts[0])
       setChainId(chainId)
       setEthBalance(ethBalance)
+      setPoc20Balance(poc20balance)
       setPublicWalletAddress(accounts[0])
 
       const { data: user } = await axios.get(
@@ -45,7 +50,7 @@ const Login = () => {
       } else {
         const signature = await handleSignMessage(accounts[0], user.nonce)
         const accessToken = await handleAuthenticate(accounts[0], signature)
-        saveUserInfo(ethBalance, chainId, accessToken)
+        saveUserInfo(ethBalance, poc20balance, chainId, accessToken)
       }
     } catch (err) {
       console.log(
@@ -62,7 +67,7 @@ const Login = () => {
     })
     const signature = await handleSignMessage(publicWalletAddress, user.nonce)
     const accessToken = await handleAuthenticate(publicWalletAddress, signature)
-    saveUserInfo(ethBalance, chainId, accessToken)
+    saveUserInfo(ethBalance, poc20balance, chainId, accessToken)
   }
 
   const handleSignMessage = async (publicAddress, nonce) => {
@@ -86,8 +91,20 @@ const Login = () => {
     return access_token
   }
 
-  const saveUserInfo = (metamaskBalance, chainId, accessToken) => {
-    dispatch(fetchUserDetails({ metamaskBalance, chainId, accessToken }))
+  const saveUserInfo = (
+    metamaskBalance,
+    poc20TokenBalance,
+    chainId,
+    accessToken
+  ) => {
+    dispatch(
+      fetchUserDetails({
+        metamaskBalance,
+        poc20TokenBalance,
+        chainId,
+        accessToken,
+      })
+    )
   }
 
   return (

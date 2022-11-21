@@ -21,10 +21,21 @@ const domainData = {
   verifyingContract: '0x1C56346CD2A2Bf3202F771f50d3D14a367B48070',
   salt: '0xf2d857f4a3edcb9b78b4d503bfe733db1e3f6cdc2b7971ee739626c97e86a558',
 }
-var message = {
+let message = {
   amount: 100,
   bidder: {
     userId: 323,
     wallet: '0x3333333333333333333333333333333333333333',
   },
 }
+
+const data = JSON.stringify({
+  types: {
+    EIP712Domain: domain,
+    Bid: bid,
+    Identity: identity,
+  },
+  domain: domainData,
+  primaryType: 'Bid',
+  message: message,
+})

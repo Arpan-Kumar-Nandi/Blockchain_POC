@@ -3,7 +3,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { CommonUtils } from '../utils/CommonUtils';
 import Web3Util from '../utils/Web3Utils';
-import { ProductDetailsBody } from './dto/productDetailsBody.dto';
+import { NFT721Contract } from './dto/NFT721Contract.dto';
 import { ProductDetailsSmartContractDeploy } from './dto/productDetailsSmartContractDeploy.dto';
 import { Model } from 'mongoose';
 import { fromWei, toWei } from 'web3-utils';
@@ -17,37 +17,19 @@ export class TransactionService {
     private readonly nft721model: Model<NFT721Document>,
   ) {}
 
-  async buyPOC20Tokens(publicAddress: string, ethersToSpend: number) {
-    return this.web3Util.buyPOC20Tokens(publicAddress, ethersToSpend);
+  // async buyPOC20Tokens(publicAddress: string, ethersToSpend: number) {
+  //   return this.web3Util.buyPOC20Tokens(publicAddress, ethersToSpend);
+  // }
+  generateNFTToken() {
+    return this.commonUtils.generateTokenId();
   }
 
-  async createNFT(publicAddress: string, productDetails: ProductDetailsBody) {
-    // uint tokenId, string memory title, string memory description, uint price, string memory date, address POC20Address
-    const tokenId = this.commonUtils.generateTokenId();
-    const date = new Date().toDateString();
-
-    const productDetailsForSmartContract: ProductDetailsSmartContractDeploy = {
-      ...productDetails,
-      tokenId,
-      date,
-      address: '0x85860320dE6Df0D9Bb9B6AC667D82Aa90Aee25C1',
-    };
-
-    const deployedContract = await this.web3Util.createNFT(
-      publicAddress,
-      productDetailsForSmartContract,
-    );
-
-    let name = await deployedContract.methods.name().call();
-    name = name.split(' ')[0];
-
-    const contractAddress = deployedContract.options.address;
-
+  async createNFT(nft721: NFT721Contract) {
     const contract = await this.nft721model.create({
-      name,
-      contractAddress,
-      owner: publicAddress,
-      tokenId,
+      name: nft721.name,
+      contractAddress: nft721.contractAddress,
+      owner: nft721.owner,
+      tokenId: nft721.tokenId,
     });
 
     return contract;
@@ -83,17 +65,17 @@ export class TransactionService {
     return nftDetails;
   }
 
-  async buyNFTToken(contractAddress, tokenId, publicAddress) {
+  async buyNFTToken(contractAddress, publicAddress) {
     try {
-      const transaction = await this.web3Util.buyNFTToken(
-        contractAddress,
-        parseInt(tokenId),
-        publicAddress,
-      );
+      // const transaction = await this.web3Util.buyNFTToken(
+      //   contractAddress,
+      //   parseInt(tokenId),
+      //   publicAddress,
+      // );
       const nft = await this.nft721model.findOne({ contractAddress });
       nft.owner = publicAddress;
       nft.save();
-      return transaction;
+      // return transaction;
     } catch (err) {
       console.log(err);
     }

@@ -38,11 +38,11 @@ export class UserController {
     return req.user;
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('/getpoc20balance')
-  async getPOC20Balance(@Request() req) {
-    return this.userService.getPOC20Balance(req.user.publicAddress);
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @Get('/getpoc20balance')
+  // async getPOC20Balance(@Request() req) {
+  //   return this.userService.getPOC20Balance(req.user.publicAddress);
+  // }
 
   @UseGuards(JwtAuthGuard)
   @Get('/logout')

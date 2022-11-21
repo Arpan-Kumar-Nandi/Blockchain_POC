@@ -6,6 +6,9 @@ import {
 import './Cards.css'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
+import Web3Util from '../../../../utils/Web3Utils'
+
+const web3Util = new Web3Util()
 
 const Cards = ({ productsList = [], context = '' }) => {
   const dispatch = useDispatch()
@@ -16,13 +19,18 @@ const Cards = ({ productsList = [], context = '' }) => {
     e.preventDefault()
     e.stopPropagation()
 
-    dispatch(
-      buyNFTToken({
-        contractAddress: item.contractAddress,
-        tokenId: item.tokenId,
-        price: item.price,
-      })
+    await web3Util.buyNFTToken(
+      item.contractAddress,
+      parseInt(item.tokenId),
+      userAccount?.publicAddress
     )
+    // dispatch(
+    //   buyNFTToken({
+    //     contractAddress: item.contractAddress,
+    //     tokenId: item.tokenId,
+    //     price: item.price,
+    //   })
+    // )
   }
 
   const handleRedirect = async (item, context) => {

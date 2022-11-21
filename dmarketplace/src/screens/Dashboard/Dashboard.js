@@ -4,7 +4,7 @@ import { Outlet, useNavigate } from 'react-router'
 import {
   logout,
   updateMetamaskBalance,
-  fetchPOC20Balance,
+  updatePOC20Balance,
 } from '../../store/user/userSlice'
 import mainlogo from '../../assets/mainlogo.png'
 import './Dashboard.css'
@@ -12,7 +12,9 @@ import {
   MdAccountBalanceWallet,
   MdOutlinePowerSettingsNew,
 } from 'react-icons/md'
-import web3 from '../../web3'
+import Web3Util from '../../utils/Web3Utils'
+
+const web3Util = new Web3Util()
 
 const Dashboard = () => {
   const dispatch = useDispatch()
@@ -23,17 +25,25 @@ const Dashboard = () => {
   )
 
   const getMetamaskBalance = useCallback(async () => {
-    let ethBalance = await web3.eth.getBalance(userAccount?.publicAddress)
-    ethBalance = web3.utils.fromWei(ethBalance, 'ether')
-
+    const ethBalance = await web3Util.getMetamaskBalance(
+      userAccount?.publicAddress
+    )
     dispatch(updateMetamaskBalance(ethBalance))
+  }, [userAccount, dispatch])
+
+  const getPOC20Balance = useCallback(async () => {
+    const poc20balance = await web3Util.getPOC20Balance(
+      userAccount?.publicAddress
+    )
+    dispatch(updatePOC20Balance(poc20balance))
   }, [userAccount, dispatch])
 
   useEffect(() => {
     !userAccount && navigate('/login')
-    dispatch(fetchPOC20Balance())
+    //dispatch(fetchPOC20Balance())
+    getPOC20Balance()
     getMetamaskBalance()
-  }, [userAccount, navigate, getMetamaskBalance, dispatch])
+  }, [userAccount, navigate, getMetamaskBalance, getPOC20Balance])
 
   const onDisconnect = async () => {
     dispatch(logout())

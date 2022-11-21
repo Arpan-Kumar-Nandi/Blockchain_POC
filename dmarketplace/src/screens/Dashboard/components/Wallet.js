@@ -1,13 +1,17 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  fetchPOC20Balance,
+  // fetchPOC20Balance,
+  updatePOC20Balance,
   updateMetamaskBalance,
-  buyPOC20Tokens,
+  // buyPOC20Tokens,
+  updateTransactionStatus,
   resetTransactionStatus,
 } from '../../../store/user/userSlice'
-import web3 from '../../../web3'
+import Web3Util from '../../../utils/Web3Utils'
 import './Wallet.css'
+
+const web3Util = new Web3Util()
 
 const Wallet = () => {
   const dispatch = useDispatch()
@@ -22,23 +26,32 @@ const Wallet = () => {
   }, [dispatch])
 
   const getMetamaskBalance = useCallback(async () => {
-    let ethBalance = await web3.eth.getBalance(userAccount.publicAddress)
-    ethBalance = web3.utils.fromWei(ethBalance, 'ether')
+    const ethBalance = await web3Util.getMetamaskBalance(
+      userAccount?.publicAddress
+    )
     dispatch(updateMetamaskBalance(ethBalance))
   }, [userAccount, dispatch])
 
+  const getPOC20Balance = useCallback(async () => {
+    const poc20balance = await web3Util.getPOC20Balance(
+      userAccount?.publicAddress
+    )
+    dispatch(updatePOC20Balance(poc20balance))
+  }, [userAccount, dispatch])
+
   useEffect(() => {
-    dispatch(fetchPOC20Balance())
+    // dispatch(fetchPOC20Balance())
+    getPOC20Balance()
     getMetamaskBalance()
-  }, [transactionStatus, getMetamaskBalance, dispatch])
+  }, [transactionStatus, getMetamaskBalance, getPOC20Balance, dispatch])
 
   const handleBuyTokens = async (e) => {
     e.preventDefault()
-    dispatch(
-      buyPOC20Tokens({
-        ethersToSpend,
-      })
+    const status = await web3Util.buyPOC20Tokens(
+      userAccount?.publicAddress,
+      ethersToSpend
     )
+    dispatch(updateTransactionStatus(status))
   }
 
   const onChangeEthersSpend = (e) => {
